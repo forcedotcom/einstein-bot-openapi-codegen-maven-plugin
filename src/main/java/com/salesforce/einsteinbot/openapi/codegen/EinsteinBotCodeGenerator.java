@@ -30,23 +30,29 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
   public static final String POLYMORPHIC_INTERFACE = "polymorphicInterface";
   public static final String CODE_GENERATOR_NAME = "einsteinbot";
   public static final String ANY_OF_PREFIX = "AnyOf";
-  private Map<String, String> anyOfTypeMapping;
+  public static final String ONE_OF_PREFIX = "OneOf";
+  public static final String EINSTEIN_BOT_TEMPLATE_DIR = "einsteinbot/Java";
+  private Map<String, String> customTypeMapping;
 
   public EinsteinBotCodeGenerator() {
     super();
     //This dir contains only the customized template.
     //But the base class code generator many templates which are simply copied into the same path during compile time.
-    embeddedTemplateDir = templateDir = "einsteinbot/Java";
+    embeddedTemplateDir = templateDir = EINSTEIN_BOT_TEMPLATE_DIR;
   }
 
   @Override
   public void processOpts() {
     super.processOpts();
-    this.anyOfTypeMapping = this.typeMapping
+    this.customTypeMapping = this.typeMapping
         .entrySet()
         .stream()
-        .filter(e -> e.getKey().startsWith(ANY_OF_PREFIX))
+        .filter(e -> isSupportedTypeMapping(e.getKey()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  }
+
+  private boolean isSupportedTypeMapping(String typeMappingKey) {
+    return typeMappingKey.startsWith(ANY_OF_PREFIX) || typeMappingKey.startsWith(ONE_OF_PREFIX);
   }
 
   @Override
@@ -66,7 +72,7 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
   }
 
   private Optional<String> findInterfaceForModel(String name) {
-    return this.anyOfTypeMapping
+    return this.customTypeMapping
         .entrySet()
         .stream()
         .filter(e -> checkIfTypeMappingContainName(e, name))
