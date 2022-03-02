@@ -1,4 +1,4 @@
-# Chatbot Service OpenAPI Codegen
+# Einstein Bot OpenAPI Codegen Maven Plugin
 
 ## Overview
 
