@@ -74,7 +74,7 @@ Here is example usage in your pom.xml
 ### Code Style
 
 The project uses the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
-Format settings definition files for importing into IDEs are available for[Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
+Format settings definition files for importing into IDEs are available for [Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
 and [IntelliJ IDEA](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml).
 
 ### Updating the library
