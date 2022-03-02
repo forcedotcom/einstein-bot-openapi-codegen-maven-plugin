@@ -85,4 +85,20 @@ The first two fields in the version number match the major / minor version of th
 
 ### Templates
 
-Several files in the `src/main/resources/einsteinbot/Java` directory override the default OpenAPI templates. The remaining templates are copied into the same path at compile time (see pom.xml) . When updating the OpenAPI generator version, you will likely want to update the templates as well. The directory contains the original pre-modified version of the templates to make it easier to re-apply the changes necessary in the template.
+`pojo.mustache` file in the `src/main/resources/einsteinbot/Java` directory override the default OpenAPI templates. The remaining templates are copied into the same path at compile time (see pom.xml) . 
+
+When updating the OpenAPI generator version, you need to update the template `pojo.mustache` as well. The directory contains the original pre-modified version of the templates to make it easier to re-apply the changes necessary in the template.
+
+You can get the `pojo.mustache` template for the version you are upgrading by downloading source code from [releases page](https://github.com/OpenAPITools/openapi-generator/tags)  
+
+As of version `5.4.0`, you will need to replace:
+
+```
+{{#vendorExtensions.x-implements}}
+```
+with
+
+```
+{{^vendorExtensions.x-implements}}{{#polymorphicInterface}} implements {{polymorphicInterface}} {{/polymorphicInterface}}{{/vendorExtensions.x-implements}} {{#vendorExtensions.x-implements}}
+```
+on the line that starts with `public class {{classname}}`
