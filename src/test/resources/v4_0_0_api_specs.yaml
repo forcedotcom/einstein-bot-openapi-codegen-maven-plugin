@@ -201,7 +201,7 @@ components:
         metrics:
           description: "Session metrics"
           type: "object"
-          additionalProperties: true
+          additionalProperties: false
       required:
         - "sessionId"
         - "orgId"
@@ -209,7 +209,7 @@ components:
         - "botVersion"
         - "processedSequenceIds"
         - "messages"
-      additionalProperties: true
+      additionalProperties: false
 
     MessageId:
       description: "UUID that references this message"
@@ -797,7 +797,7 @@ components:
           example: "https://d5e000009s7bceah-dev-ed.my.salesforce.com/"
       required:
         - "endpoint"
-      additionalProperties: true
+      additionalProperties: false
 
     ResponseOptions:
       type: "object"
@@ -869,7 +869,7 @@ components:
         - "error"
         - "message"
         - "timestamp"
-      additionalProperties: true
+      additionalProperties: false
 
   responses:
     ErrorResponse:
@@ -1026,61 +1026,61 @@ components:
             type: "string"
 
     ServerBusyError:
-      description: "Server is busy and cannot process the request at this time"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          example:
-            status: 423
-            path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
-            requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
-            error: "ServerBusyError"
-            message: "Server is busy and cannot process the request at this time"
-            timestamp: 1531245973799
-            additionalProp1: { }
-      headers:
-        "X-Request-ID":
-          description: "Request ID"
-          schema:
-            type: "string"
+          description: "Server is busy and cannot process the request at this time"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                status: 423
+                path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
+                requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
+                error: "ServerBusyError"
+                message: "Server is busy and cannot process the request at this time"
+                timestamp: 1531245973799
+                additionalProp1: { }
+          headers:
+            "X-Request-ID":
+              description: "Request ID"
+              schema:
+                type: "string"
 
     TooManyRequestsError:
-      description: "Too many requests for the server to handle"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          example:
-            status: 429
-            path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
-            requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
-            error: "TooManyRequestsError"
-            message: "Too many requests for the server to handle"
-            timestamp: 1531245973799
-            additionalProp1: { }
-      headers:
-        "X-Request-ID":
-          description: "Request ID"
-          schema:
-            type: "string"
+          description: "Too many requests for the server to handle"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                status: 429
+                path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
+                requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
+                error: "TooManyRequestsError"
+                message: "Too many requests for the server to handle"
+                timestamp: 1531245973799
+                additionalProp1: { }
+          headers:
+            "X-Request-ID":
+              description: "Request ID"
+              schema:
+                type: "string"
 
     ServiceUnavailable:
-      description: "Service is unavailable possibly because Apex/Flow calls timed out"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          example:
-            status: 503
-            path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
-            requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
-            error: "ServiceUnavailable"
-            message: "Service is unavailable possibly because Apex/Flow calls timed out"
-            timestamp: 1531245973799
-            additionalProp1: { }
-      headers:
-        "X-Request-ID":
-          description: "Request ID"
-          schema:
-            type: "string"
+          description: "Service is unavailable possibly because Apex/Flow calls timed out"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                status: 503
+                path: "/v1/00DRM00000067To/chatbots/HelloWorldBot/messages"
+                requestId: "19c056ab-d909-49df-b976-65e56b6ab214"
+                error: "ServiceUnavailable"
+                message: "Service is unavailable possibly because Apex/Flow calls timed out"
+                timestamp: 1531245973799
+                additionalProp1: { }
+          headers:
+            "X-Request-ID":
+              description: "Request ID"
+              schema:
+                type: "string"

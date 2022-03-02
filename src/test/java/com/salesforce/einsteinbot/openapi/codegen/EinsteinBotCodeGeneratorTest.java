@@ -38,7 +38,9 @@ public class EinsteinBotCodeGeneratorTest {
   private ImmutableMap<String, String> typeMappings = ImmutableMap.of(
       "AnyOfBooleanVariableDateVariableDateTimeVariableMoneyVariableNumberVariableTextVariableObjectVariableRefVariableListVariable",
       "AnyVariable",
-      "AnyOfSessionEndedResponseMessageTextResponseMessageChoicesResponseMessageEscalateResponseMessageStaticContentMessage",
+      "OneOfInitMessageEndSessionMessageTextMessageChoiceMessageRedirectMessageTransferSucceededRequestMessageTransferFailedRequestMessage",
+      "AnyRequestMessage",
+      "OneOfSessionEndedResponseMessageTextResponseMessageChoicesResponseMessageEscalateResponseMessage",
       "AnyResponseMessage"
   );
 
@@ -67,7 +69,7 @@ public class EinsteinBotCodeGeneratorTest {
 
       Assertions.assertTrue(failureResults.isEmpty(), " Failures Found : " + failureResults);
     } finally {
-        FileUtils.deleteDirectory(tempDir);
+       FileUtils.deleteDirectory(tempDir);
     }
   }
 
