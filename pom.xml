@@ -13,7 +13,7 @@
 
     <groupId>com.salesforce.einsteinbot</groupId>
     <artifactId>einstein-bot-openapi-codegen-maven-plugin</artifactId>
-    <version>5.4.1-SNAPSHOT</version>
+    <version>5.4.1</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
