@@ -54,7 +54,6 @@ public class EinsteinBotCodeGeneratorTest {
 
   @Test
   public void testWorkingApi() throws Exception {
-    Assertions.fail("force failure to test workflow");
     File tempDir = Files.createTempDirectory("chatbot-generator").toFile();
     try {
       List<String> failureResults = generate(tempDir, "v4_0_0_api_specs.yaml")
