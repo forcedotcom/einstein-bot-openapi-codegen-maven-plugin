@@ -28,3 +28,17 @@ jobs:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
           git_push_gpgsign: false
+    - name: Set up Apache Maven Central
+      uses: actions/setup-java@v2
+      with: # running setup-java again overwrites the settings.xml
+        distribution: 'zulu'
+        java-version: '11'
+        server-username: MAVEN_USERNAME # env variable for username in deploy
+        server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+        settings-path: ${{ github.workspace }}/generated-settings
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
