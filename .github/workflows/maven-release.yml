@@ -30,13 +30,6 @@ jobs:
         server-username: MAVEN_CENTRAL_USER # env variable for username in deploy
         server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
         settings-path: ${{ github.workspace }}/generated-settings
-    - name: Read settings.xml
-      id: settings
-      uses: juliangruber/read-file-action@v1
-      with:
-        path: ${{ github.workspace }}/generated-settings/settings.xml
-    - name: Echo settings.xml
-      run: echo "${{ steps.settings.outputs.content }}"
     - name: Import GPG Key
       uses: crazy-max/ghaction-import-gpg@v4
       with:
