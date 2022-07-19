@@ -44,6 +44,10 @@ public class EinsteinBotCodeGeneratorTest {
       "AnyResponseMessage"
   );
 
+  private ImmutableMap<String, String> additionalProperties = ImmutableMap.of(
+      "ExcludeModelsImplementsPolymorphicInterface",
+      "Attachment");
+
   private boolean isModelFile(File file) {
     return !file.getName().endsWith("Test.java") && file.getName().endsWith(".java");
   }
