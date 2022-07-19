@@ -8,13 +8,26 @@
 
 package com.salesforce.einsteinbot.openapi.codegen;
 
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.ArrayInitializerExpr;
+import com.github.javaparser.ast.expr.ClassExpr;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import io.swagger.v3.oas.models.media.Schema;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.languages.JavaClientCodegen;
@@ -50,8 +63,47 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
 
   @Override
   public void processOpts() {
-    System.out.println("RAJA -> " + this.additionalProperties);
     super.processOpts();
+
+    File sourceFile = new File("/Users/relango/dev/chatbot/runtime/einstein-bot-sdk-java/src/main/java/com/salesforce/einsteinbot/sdk/model/AnyVariable.java");
+    try {
+      CompilationUnit cu = StaticJavaParser.parse(sourceFile);
+      System.out.println("RAJA --> annotations " + cu.getType(0).getName());
+      AnnotationExpr jsonSubtypeAnnotation = cu.getType(0)
+          .getAnnotationByName("JsonSubTypes").get();
+      ArrayInitializerExpr arrayInitializerExpr =  (ArrayInitializerExpr) jsonSubtypeAnnotation.getChildNodes().get(1);
+      NormalAnnotationExpr firstValue = (NormalAnnotationExpr) arrayInitializerExpr.getValues().get(0);
+
+      Optional<String> annovationValue = firstValue.getPairs()
+          .stream()
+          .filter(v -> v.getName().toString().equals("value"))
+          .findFirst().map(v -> ((ClassExpr) v.getValue()).getType())
+          .map(v -> v.toString());
+
+      firstValue.getPairs().stream().forEach( v -> System.out.println(v.getName() + " ==> " + v.getValue() + " == " + v.getValue().getClass()));
+      System.out.println("RAJA --> annotation value == " + annovationValue);
+
+
+
+      Optional<AnnotationDeclaration> annotations = cu
+          .getAnnotationDeclarationByName("JsonSubTypes");
+      System.out.println("RAJA --> " + annotations);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+   /* JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    int result = compiler.run(null, null, null, sourceFile.getPath());
+    System.out.println("RAJA compile result -> " + result);
+
+    try {
+      Class modelClass = Class.forName("com.salesforce.einsteinbot.sdk.model.AnyRequestMessage");
+      System.out.println("RAJA -> " + modelClass.getAnnotations());
+    } catch (ClassNotFoundException e) {
+      //todo
+      e.printStackTrace();
+    }*/
+
     excludeModelsImplementsPolymorphicInterface = Arrays.asList(additionalProperties
         .getOrDefault(PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE,"")
         .toString().split(PROPERTY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE_DELIMITER_REGEX));
@@ -93,11 +145,8 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
   }
 
   private boolean isModelInImplementsExcludeList(String name){
-    System.out.println("RAJA EXCLUDING -> " + name + " ==> " + excludeModelsImplementsPolymorphicInterface.contains(name) + " ==? " + excludeModelsImplementsPolymorphicInterface );
-    if (excludeModelsImplementsPolymorphicInterface.contains(name)){
-      //TODO
+   //TODO System.out.println("RAJA EXCLUDING -> " + name + " ==> " + excludeModelsImplementsPolymorphicInterface.contains(name) + " ==? " + excludeModelsImplementsPolymorphicInterface );
 
-    }
     return excludeModelsImplementsPolymorphicInterface.contains(name);
   }
 
