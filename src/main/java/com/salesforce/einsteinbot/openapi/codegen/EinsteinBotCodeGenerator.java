@@ -50,7 +50,6 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
 
   @Override
   public void processOpts() {
-    System.out.println("RAJA -> " + this.additionalProperties);
     super.processOpts();
     excludeModelsImplementsPolymorphicInterface = Arrays.asList(additionalProperties
         .getOrDefault(PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE,"")
@@ -92,12 +91,8 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
         .map(Map.Entry::getValue);
   }
 
+  //todo add unit tests
   private boolean isModelInImplementsExcludeList(String name){
-    System.out.println("RAJA EXCLUDING -> " + name + " ==> " + excludeModelsImplementsPolymorphicInterface.contains(name) + " ==? " + excludeModelsImplementsPolymorphicInterface );
-    if (excludeModelsImplementsPolymorphicInterface.contains(name)){
-      //TODO
-
-    }
     return excludeModelsImplementsPolymorphicInterface.contains(name);
   }
 
