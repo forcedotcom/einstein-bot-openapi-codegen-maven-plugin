@@ -60,7 +60,7 @@ public class EinsteinBotCodeGeneratorTest {
   public void testWorkingApi() throws Exception {
     File tempDir = Files.createTempDirectory("chatbot-generator").toFile();
     try {
-      List<String> failureResults = generate(tempDir, "v4_0_0_api_specs.yaml")
+      List<String> failureResults = generate(tempDir, "v5_0_0_api_specs.yaml")
           .stream()
           .filter(this::isModelFile)
           .map(this::findClassDeclarationLine)
