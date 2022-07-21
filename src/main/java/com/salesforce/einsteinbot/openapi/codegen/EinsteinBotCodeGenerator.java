@@ -35,8 +35,8 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
   public static final String ANY_OF_PREFIX = "AnyOf";
   public static final String ONE_OF_PREFIX = "OneOf";
   public static final String EINSTEIN_BOT_TEMPLATE_DIR = "einsteinbot/Java";
-  private static final String PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE = "ExcludeModelsImplementsPolymorphicInterface";
-  private static final String PROPERTY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE_DELIMITER_REGEX = "\\|";
+  public static final String PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE = "ExcludeModelsImplementsPolymorphicInterface";
+  public static final String PROPERTY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE_DELIMITER_REGEX = "\\|";
 
   private Map<String, String> customTypeMapping;
   private List<String> excludeModelsImplementsPolymorphicInterface = Collections.emptyList();
@@ -51,11 +51,19 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
   @Override
   public void processOpts() {
     super.processOpts();
-    excludeModelsImplementsPolymorphicInterface = Arrays.asList(additionalProperties
-        .getOrDefault(PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE,"")
-        .toString().split(PROPERTY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE_DELIMITER_REGEX));
+    this.excludeModelsImplementsPolymorphicInterface = initExcludeModelsImplementsPolymorphicInterface();
+    this.customTypeMapping = initCustomTypeMapping();
+  }
 
-    this.customTypeMapping = this.typeMapping
+  private List<String> initExcludeModelsImplementsPolymorphicInterface() {
+    return Arrays.asList(additionalProperties
+        .getOrDefault(PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE, "")
+        .toString()
+        .split(PROPERTY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE_DELIMITER_REGEX));
+  }
+
+  private Map<String, String> initCustomTypeMapping() {
+    return this.typeMapping
         .entrySet()
         .stream()
         .filter(e -> isSupportedTypeMapping(e.getKey()))
@@ -91,7 +99,6 @@ public class EinsteinBotCodeGenerator extends JavaClientCodegen implements Codeg
         .map(Map.Entry::getValue);
   }
 
-  //todo add unit tests
   private boolean isModelInImplementsExcludeList(String name){
     return excludeModelsImplementsPolymorphicInterface.contains(name);
   }

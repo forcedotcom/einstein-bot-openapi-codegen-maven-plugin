@@ -7,13 +7,17 @@
 
 package com.salesforce.einsteinbot.openapi.codegen;
 
+import static com.salesforce.einsteinbot.openapi.codegen.EinsteinBotCodeGenerator.PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE;
+
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -31,22 +35,25 @@ import org.openapitools.codegen.config.CodegenConfigurator;
  */
 public class EinsteinBotCodeGeneratorTest {
 
-
   public static final String TEST_RESOURCES_DIR = "src/test/resources/";
   public static final String LIBRARY = "webclient";
 
   private ImmutableMap<String, String> typeMappings = ImmutableMap.of(
       "AnyOfBooleanVariableDateVariableDateTimeVariableMoneyVariableNumberVariableTextVariableObjectVariableRefVariableListVariable",
       "AnyVariable",
-      "OneOfInitMessageEndSessionMessageTextMessageChoiceMessageRedirectMessageTransferSucceededRequestMessageTransferFailedRequestMessage",
+      "OneOfChoiceMessageTextMessageTransferSucceededRequestMessageTransferFailedRequestMessageRedirectMessage",
       "AnyRequestMessage",
-      "OneOfSessionEndedResponseMessageTextResponseMessageChoicesResponseMessageEscalateResponseMessage",
-      "AnyResponseMessage"
+      "OneOfSessionEndedResponseMessageTextResponseMessageChoicesResponseMessageEscalateResponseMessageStaticContentMessage",
+      "AnyResponseMessage",
+      "AnyOfStaticContentAttachmentsStaticContentText",
+      "AnyStaticContentMessage"
   );
 
-  private ImmutableMap<String, String> additionalProperties = ImmutableMap.of(
-      "ExcludeModelsImplementsPolymorphicInterface",
-      "Attachment");
+  private List<String> excludeModelsImplementsPolymorphicInterface = Lists.newArrayList("Attachment", "Status");
+
+  private ImmutableMap<String, Object> additionalProperties = ImmutableMap.of(
+      PROPERTY_KEY_EXCLUDE_MODELS_IMPLEMENTS_POLYMORPHIC_INTERFACE,
+      excludeModelsImplementsPolymorphicInterface.stream().collect(Collectors.joining("|")));
 
   private boolean isModelFile(File file) {
     return !file.getName().endsWith("Test.java") && file.getName().endsWith(".java");
@@ -73,13 +80,14 @@ public class EinsteinBotCodeGeneratorTest {
 
       Assertions.assertTrue(failureResults.isEmpty(), " Failures Found : " + failureResults);
     } finally {
-       FileUtils.deleteDirectory(tempDir);
+      FileUtils.deleteDirectory(tempDir);
     }
   }
 
   protected List<File> generate(File tempDir, String yaml) throws IOException {
 
     final CodegenConfigurator configurator = new CodegenConfigurator()
+        .setAdditionalProperties(additionalProperties)
         .setGeneratorName(EinsteinBotCodeGenerator.CODE_GENERATOR_NAME)
         .setLanguageSpecificPrimitives(typeMappings.keySet())
         .setTypeMappings(typeMappings)
@@ -108,9 +116,14 @@ public class EinsteinBotCodeGeneratorTest {
     return this.typeMappings
         .entrySet()
         .stream()
-        .filter(e -> checkIfTypeMappingContainName(e, name))
+        .filter(e -> isModelPresentInTypeMappingAndNotPresentInExcludeList(name, e))
         .findFirst()
         .map(Map.Entry::getValue);
+  }
+
+  private boolean isModelPresentInTypeMappingAndNotPresentInExcludeList(String modelName, Entry<String, String> typeMapping) {
+    return checkIfTypeMappingContainName(typeMapping, modelName) &&
+        !excludeModelsImplementsPolymorphicInterface.contains(modelName);
   }
 
   private boolean checkIfTypeMappingContainName(Map.Entry<String, String> typeMappingEntry,
@@ -128,16 +141,17 @@ public class EinsteinBotCodeGeneratorTest {
       verifyClassImplementInterface(className, classDeclarationLine, expectedInterface.get())
           .ifPresent(f -> failures.add(f));
     } else {
-      verifyClassNotImplementInterface(classDeclarationLine)
+      verifyClassNotImplementInterface(className, classDeclarationLine)
           .ifPresent(f -> failures.add(f));
     }
 
     return failures;
   }
 
-  private Optional<String> verifyClassNotImplementInterface(String classDeclarationLine) {
+  private Optional<String> verifyClassNotImplementInterface(String className, String classDeclarationLine) {
     return typeMappings.values().stream()
         .filter(interfaceName -> classDeclarationLine.contains("implements " + interfaceName))
+        .map(interfaceName -> className + " should not implement interface " + interfaceName)
         .findFirst();
   }
 
