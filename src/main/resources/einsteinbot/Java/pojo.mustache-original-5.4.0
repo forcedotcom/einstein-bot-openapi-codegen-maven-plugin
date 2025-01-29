@@ -176,14 +176,14 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}}{{#vendorExtens
 {{/deprecated}}
 {{#required}}
 {{#isNullable}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/isNullable}}
 {{^isNullable}}
-  @javax.annotation.Nonnull
+  @jakarta.annotation.Nonnull
 {{/isNullable}}
 {{/required}}
 {{^required}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/required}}
 {{#jsonb}}
   @JsonbProperty("{{baseName}}")

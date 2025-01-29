@@ -1,9 +1,10 @@
+import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * {{description}}{{^description}}{{classname}}{{/description}}{{#isDeprecated}}
  * @deprecated{{/isDeprecated}}
  */{{#isDeprecated}}
 @Deprecated{{/isDeprecated}}{{#description}}
-@ApiModel(description = "{{{.}}}"){{/description}}
+@Schema(description = "{{{.}}}"){{/description}}
 {{#jackson}}
 @JsonPropertyOrder({
 {{#vars}}
@@ -106,7 +107,7 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}} {{^vendorExten
   public {{classname}} add{{nameInCamelCase}}Item({{{items.datatypeWithEnum}}} {{name}}Item) {
     {{#vendorExtensions.x-is-jackson-optional-nullable}}
     if (this.{{name}} == null || !this.{{name}}.isPresent()) {
-      this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of({{{defaultValue}}});
+      this.{{name}} = JsonNullable.undefined();
     }
     try {
       this.{{name}}.get().add({{name}}Item);
@@ -176,19 +177,19 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}} {{^vendorExten
 {{/deprecated}}
 {{#required}}
 {{#isNullable}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/isNullable}}
 {{^isNullable}}
-  @javax.annotation.Nonnull
+  @jakarta.annotation.Nonnull
 {{/isNullable}}
 {{/required}}
 {{^required}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/required}}
 {{#jsonb}}
   @JsonbProperty("{{baseName}}")
 {{/jsonb}}
-{{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}  @ApiModelProperty({{#example}}example = "{{{.}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
+{{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}  @Schema({{#example}}example = "{{{.}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}description = "{{{description}}}")
 {{#vendorExtensions.x-extra-annotation}}
   {{{vendorExtensions.x-extra-annotation}}}
 {{/vendorExtensions.x-extra-annotation}}
@@ -228,7 +229,7 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}} {{^vendorExten
 {{#vendorExtensions.x-setter-extra-annotation}}  {{{vendorExtensions.x-setter-extra-annotation}}}
 {{/vendorExtensions.x-setter-extra-annotation}}{{#jackson}}{{^vendorExtensions.x-is-jackson-optional-nullable}}{{> jackson_annotations}}{{/vendorExtensions.x-is-jackson-optional-nullable}}{{/jackson}}  public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {
     {{#vendorExtensions.x-is-jackson-optional-nullable}}
-    this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of({{name}});
+    this.{{name}} = JsonNullable.undefined();
     {{/vendorExtensions.x-is-jackson-optional-nullable}}
     {{^vendorExtensions.x-is-jackson-optional-nullable}}
     this.{{name}} = {{name}};

@@ -172,11 +172,11 @@ public class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{{#vendorE
   **/
 {{#required}}
 {{#isNullable}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/isNullable}}
 {{/required}}
 {{^required}}
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
 {{/required}}
 {{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}  @ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
 {{#vendorExtensions.x-extra-annotation}}
