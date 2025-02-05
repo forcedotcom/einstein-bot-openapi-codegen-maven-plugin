@@ -11,7 +11,7 @@
 
     <groupId>com.salesforce.einsteinbot</groupId>
     <artifactId>einstein-bot-openapi-codegen-maven-plugin</artifactId>
-    <version>5.4.5-SNAPSHOT</version>
+    <version>7.10.0-SNAPSHOT</version>
 
     <name>Einstein Bot OpenAPI Codegen Maven Plugin</name>
     <description>
